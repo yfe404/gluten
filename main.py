@@ -35,21 +35,6 @@ def wait_element(driver: webdriver.Firefox, elem_info, timeout: int=30, message:
         raise err
 
 
-def fill_input(driver: webdriver.Firefox, text: str, _id=None, xpath=None, klass=None):
-    if _id is not None:
-        elem_info = (By.ID, _id)
-    elif xpath is not None:
-        elem_info = (By.XPATH, xpath)
-    elif klass is not None:
-        elem_info = (By.CLASS_NAME, klass)
-
-    element = wait_element(driver, elem_info)    
-    time.sleep(1)
-    element.send_keys(Keys.CONTROL, 'a')
-    element.send_keys(text)
-    time.sleep(1)
-
-
 @retry(delay=2)
 def open_option_menu(driver: webdriver.Firefox):
     _id = "prefsButton"
