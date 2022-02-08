@@ -1,4 +1,5 @@
 import time
+import sys
 from storage import LocalStorage
 from retry import retry
 from selenium import webdriver
@@ -40,8 +41,14 @@ def open_option_menu(driver: webdriver.Firefox):
     element.click()
 
 
-def load(driver: webdriver.Firefox, filename: str):
-    pass
+def load(driver: webdriver.Firefox, storage: LocalStorage, filename: str):
+    data = None
+    with open(filename, "r") as f:
+        data = f.readline()
+
+    storage.set("CookieClickerGame", data)
+    time.sleep(1)
+    
 
 @retry(delay=1, tries=5)
 def save(driver: webdriver.Firefox, storage: LocalStorage, filename: str):
@@ -63,6 +70,8 @@ if __name__ == "__main__":
     url='https://orteil.dashnet.org/cookieclicker/'
     driver.get(url)
 
+    if len(sys.argv) > 1:
+        load(driver, storage, sys.argv[1])
     click_big_cookie(driver, 10)
     save(driver, storage, f"/tmp/cookie_clicker_{int(time.time())}.sav")
 
